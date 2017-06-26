@@ -1,1 +1,101 @@
-11111111
+组件(Component)也就是应用中的视图，是开发的主要部分。
+要创建一个组件很简单，比如我们创建一个card组件：
+ng g component card
+
+你会看到app文件夹里生成下面的四个文件(spec.ts是测试文件，可忽略，目前用不到)：
+card.component.html    
+
+card.component.scss    
+
+card.component.ts    
+
+card.component.spec.ts
+
+这里我推荐使用Angular CLI脚手架，当然你要是不觉得麻烦，也可以一个一个文件建。
+
+主要看看app/card/card.component.ts：
+import { Component, OnInit } from '@angular/core';   
+
+
+
+@Component({   
+
+  selector: 'app-card',   
+
+  templateUrl: './card.component.html',   
+
+  styleUrls: ['./card.component.scss']  
+
+})  
+
+export class CardComponent implements OnInit {   
+
+  constructor() { }    
+
+  ngOnInit() {}  
+
+}
+
+@Component()是一个装饰器，唯一需要的参数是一个元数据对象。
+参数说明：
+templateUrl：模板文件路径
+selector：组件选择器名称，一般采取横杠方式
+styleUrls：样式文件路径
+当然，还有两个属性：
+template：模板字符串
+styles：样式数组，比如：styles: ['h1{font-size:20px;}']
+当要使用这个组件时，还需要在模块中写入(在使用ng创建时，已经自动添加到app/app.module.ts中)：
+...
+
+import { CardComponent } from './card/card.component';   
+
+
+
+@NgModule({   
+
+  declarations: [   
+
+    AppComponent,   
+
+    CardComponent   
+
+  ],   
+
+  ...  
+
+})  
+
+export class AppModule { }
+
+注：这里我们再创建一个demo-component组件，用来放置这一章的实例。 这样就可以像普通的HTML元素一样使用了，比如在app/demo/demo-component.component.html中直接使用：
+<app-card></app-card>
+
+你会看到页面多了card works!
+动态嵌入内容 
+有些时候，我们需要动态内容，比如在app/demo/demo-component.html中加入如下代码：
+<app-card>   
+
+  <h5>卡头</h5>   
+
+  我是卡的内容  
+
+</app-card>
+
+可是当打开页面时，发现只是多了一行"card works!"，那如何才能显示呢？很简单，只需如下：
+// app/components/card/card.component.html   
+
+
+
+<ng-content></ng-content>
+
+上面的代码表示将组件内部的内容插入指定位置。 ng-content还有一个特别的属性，值可以是"element", #id", ".class", "[name=value]"等CSS选择器，比如我们可以这样：
+// card.component.html   
+
+
+
+<ng-content select="h5"></ng-content>
+
+上面代码表示是将组件模板中包含h5标签的内容添加到指定位置。
+著作权归作者所有。
+商业转载请联系作者获得授权,非商业转载请注明出处。
+原文: http://ghmagical.com/article/page/id/rpnjrjgb2VKk © ghmagical.com
